@@ -2,7 +2,7 @@ class TasksController < ApplicationController
    before_action :set_task, only: [:show, :edit, :update, :destroy]
   
   def index
-    @tasks = Task.all.page(params[:page]).per(3)
+    @tasks = Task.where("user_id = ?", current_user.id).page(params[:page]).per(3)
   end
   
   def show
@@ -14,7 +14,7 @@ class TasksController < ApplicationController
   
   def create
     @task = Task.new(task_params)
-
+    @task.user= current_user
     if @task.save
       flash[:success] = 'Task が正常に投稿されました'
       redirect_to @task
